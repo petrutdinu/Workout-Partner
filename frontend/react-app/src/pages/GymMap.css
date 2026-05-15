@@ -1,0 +1,201 @@
+.gym-map-page {
+  display: flex;
+  height: calc(100vh - 64px);
+  position: relative;
+}
+
+.gym-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  background: white;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gym-sidebar h2 {
+  margin: 0;
+  padding: 1.25rem 1.25rem 0.75rem;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.gym-controls {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.gym-controls .form-group {
+  flex: 1;
+  margin: 0;
+}
+
+.gym-controls label {
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.gym-controls input[type="range"] {
+  padding: 0;
+  accent-color: #e53935;
+}
+
+.amenity-filters {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.amenity-filters label {
+  font-size: 0.8rem;
+  color: #757575;
+  margin-bottom: 0.5rem;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  padding: 0.3rem 0.7rem;
+  border-radius: 14px;
+  border: 1.5px solid #e0e0e0;
+  background: white;
+  color: #555;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover {
+  border-color: #e53935;
+  color: #e53935;
+}
+
+.chip.active {
+  background: #ffebee;
+  border-color: #e53935;
+  color: #e53935;
+  font-weight: 600;
+}
+
+.gym-count {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.gym-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.gym-item {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.gym-item:hover {
+  background: #fafafa;
+}
+
+.gym-item.selected {
+  background: #ffebee;
+  border-left: 3px solid #e53935;
+}
+
+.gym-item h4 {
+  margin: 0 0 0.2rem;
+  font-size: 0.9rem;
+  color: #212121;
+}
+
+.gym-address {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: #9e9e9e;
+}
+
+.gym-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.amenity-tag {
+  background: #f5f5f5;
+  color: #616161;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}
+
+.gym-map-container {
+  flex: 1;
+  position: relative;
+}
+
+.arcgis-map {
+  width: 100%;
+  height: 100%;
+}
+
+.gym-detail-panel {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 320px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #9e9e9e;
+  line-height: 1;
+  padding: 0;
+}
+
+.btn-close:hover {
+  color: #e53935;
+}
+
+.panel-body {
+  padding: 0.75rem 1.25rem 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.panel-body p {
+  margin: 0.3rem 0;
+}
+
+.panel-body a {
+  color: #e53935;
+}
