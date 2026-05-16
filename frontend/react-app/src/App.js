@@ -14,6 +14,8 @@ import SmartMatch from './pages/SmartMatch';
 import PartnerList from './pages/PartnerList';
 import Progress from './pages/Progress';
 import Chat from './pages/Chat';
+import SharedWorkoutList from './pages/SharedWorkoutList';
+import SharedWorkout from './pages/SharedWorkout';
 import GymMap from './pages/GymMap';
 import TrainerDirectory from './pages/TrainerDirectory';
 import './App.css';
@@ -52,7 +54,10 @@ const AppLayout = () => {
           <Route path="/partners/match" element={<ProtectedRoute><SmartMatch /></ProtectedRoute>} />
           <Route path="/partners" element={<ProtectedRoute><PartnerList /></ProtectedRoute>} />
           <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+          <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
           <Route path="/chat/:userId" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+          <Route path="/shared-workouts" element={<ProtectedRoute><SharedWorkoutList /></ProtectedRoute>} />
+          <Route path="/shared-workouts/:id" element={<ProtectedRoute><SharedWorkout /></ProtectedRoute>} />
           <Route path="/gyms" element={<ProtectedRoute><GymMap /></ProtectedRoute>} />
           <Route path="/trainers" element={<ProtectedRoute><TrainerDirectory /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />

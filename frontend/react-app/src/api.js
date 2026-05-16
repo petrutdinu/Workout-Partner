@@ -43,14 +43,24 @@ export const userApi = {
 };
 
 export const workoutApi = {
-  getSessions: (params = {}) => api.get('/workouts/sessions', { params }),
-  getSessionById: (id) => api.get(`/workouts/sessions/${id}`),
-  createSession: (data) => api.post('/workouts/sessions', data),
-  deleteSession: (id) => api.delete(`/workouts/sessions/${id}`),
-  addExercise: (sessionId, data) => api.post(`/workouts/sessions/${sessionId}/exercises`, data),
-  getPartnerSessions: (userId, params = {}) => api.get(`/workouts/partner/${userId}/sessions`, { params }),
-  getMyStats: () => api.get('/workouts/stats/me'),
+  getSessions: (params = {}) => api.get('/workouts', { params }),
+  getSessionById: (id) => api.get(`/workouts/${id}`),
+  createSession: (data) => api.post('/workouts', data),
+  deleteSession: (id) => api.delete(`/workouts/${id}`),
+  addExercise: (sessionId, data) => api.post(`/workouts/${sessionId}/exercises`, data),
+  getPartnerSessions: (userId, params = {}) => api.get(`/workouts/partner/${userId}`, { params }),
+  getMyStats: () => api.get('/workouts/stats'),
   estimateCalories: (data) => api.post('/workouts/calorie-estimate', data)
+};
+
+export const sharedWorkoutApi = {
+  create: (data) => api.post('/shared-workouts', data),
+  getMyRooms: () => api.get('/shared-workouts'),
+  getRoom: (id) => api.get(`/shared-workouts/${id}`),
+  getLeaderboard: (id) => api.get(`/shared-workouts/${id}/leaderboard`),
+  join: (id) => api.put(`/shared-workouts/${id}/join`),
+  finish: (id) => api.put(`/shared-workouts/${id}/finish`),
+  addExercise: (id, data) => api.post(`/shared-workouts/${id}/exercises`, data),
 };
 
 export const matchApi = {
