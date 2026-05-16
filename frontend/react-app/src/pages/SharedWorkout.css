@@ -1,0 +1,217 @@
+.shared-workout-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.shared-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.shared-header h1 {
+  margin: 0.25rem 0;
+  font-size: 1.6rem;
+}
+
+.shared-header-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.back-link:hover { color: #333; }
+
+.status-badge { text-transform: capitalize; margin-right: 0.4rem; }
+.status-pending  { background: #fff3cd; color: #856404; }
+.status-active   { background: #d4edda; color: #155724; }
+.status-finished { background: #e2e3e5; color: #383d41; }
+
+/* Waiting card */
+.waiting-card {
+  text-align: center;
+  padding: 2rem;
+}
+
+.invite-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.session-id {
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.95rem;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* Lead banner */
+.lead-banner {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.lead-banner.you      { background: #d4edda; color: #155724; }
+.lead-banner.them     { background: #fff3cd; color: #856404; }
+.lead-banner.tie      { background: #e2e3e5; color: #383d41; }
+.lead-banner.finished.you  { background: #c3e6cb; color: #155724; }
+.lead-banner.finished.them { background: #f8d7da; color: #721c24; }
+.lead-banner.finished.tie  { background: #e2e3e5; color: #383d41; }
+
+/* Scoreboards */
+.scoreboards {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.vs-divider {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ccc;
+  align-self: center;
+  padding: 0 0.5rem;
+}
+
+.scoreboard-side {
+  flex: 1;
+  min-width: 280px;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: border-color 0.2s;
+}
+
+.scoreboard-side.me {
+  border-color: #e53935;
+}
+
+.scoreboard-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.scoreboard-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.scoreboard-you-badge {
+  background: #e53935;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.scoreboard-stats {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  flex: 1;
+  min-width: 60px;
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 0.6rem 0.4rem;
+}
+
+.stat-val {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #e53935;
+}
+
+.stat-lbl {
+  display: block;
+  font-size: 0.72rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Exercise list inside scoreboard */
+.no-exercises {
+  color: #aaa;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.ex-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.ex-table th, .ex-table td {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ex-table th {
+  color: #888;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* Exercise form */
+.exercise-form {
+  margin-bottom: 1.5rem;
+}
+
+.exercise-form h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.form-row.cols-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+/* Badge extras */
+.badge-yellow { background: #fff3cd; color: #856404; }
+.badge-grey   { background: #e2e3e5; color: #383d41; }
