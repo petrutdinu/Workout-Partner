@@ -19,10 +19,10 @@ export class UserRepository {
     return this.repo.find();
   }
 
-  findAthletes(fitnessLevel?: string, primaryGoal?: string, city?: string) {
+  findAthletes(fitnessLevel?: string, primaryGoal?: string, city?: string, excludeId?: string) {
     const qb = this.repo.createQueryBuilder('u')
-      .where('u.role = :role', { role: 'Athlete' })
-      .andWhere('u.profile_complete = true');
+      .where('u.role = :role', { role: 'Athlete' });
+    if (excludeId) qb.andWhere('u.id != :excludeId', { excludeId });
     if (fitnessLevel) qb.andWhere('u.fitness_level = :fitnessLevel', { fitnessLevel });
     if (primaryGoal) qb.andWhere('u.primary_goal = :primaryGoal', { primaryGoal });
     if (city) qb.andWhere('u.city ILIKE :city', { city: `%${city}%` });

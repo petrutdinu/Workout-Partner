@@ -23,8 +23,9 @@ export class UserController {
     @Query('fitness_level') fitnessLevel?: string,
     @Query('primary_goal') primaryGoal?: string,
     @Query('city') city?: string,
+    @Query('exclude_id') excludeId?: string,
   ) {
-    return this.service.findAthletes(fitnessLevel, primaryGoal, city);
+    return this.service.findAthletes(fitnessLevel, primaryGoal, city, excludeId);
   }
 
   @Get('trainers')

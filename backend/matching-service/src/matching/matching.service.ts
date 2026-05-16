@@ -15,9 +15,11 @@ export class MatchingService {
     private http: HttpService,
   ) {}
 
-  private async fetchAllAthletes(): Promise<any[]> {
+  private async fetchAllAthletes(excludeId?: string, filters: Record<string, string> = {}): Promise<any[]> {
     try {
-      const { data } = await firstValueFrom(this.http.get(`${USER_SERVICE}/api/v1/users/athletes`, { timeout: 10000 }));
+      const params: Record<string, string> = { ...filters };
+      if (excludeId) params.exclude_id = excludeId;
+      const { data } = await firstValueFrom(this.http.get(`${USER_SERVICE}/api/v1/users/athletes`, { params, timeout: 10000 }));
       return data || [];
     } catch { return []; }
   }
@@ -40,19 +42,21 @@ export class MatchingService {
     return ids;
   }
 
-  async getSuggestions(userId: string, profile: any) {
-    const all = await this.fetchAllAthletes();
+  async getSuggestions(userId: string, profile: any, filters: Record<string, string> = {}) {
+    const all = await this.fetchAllAthletes(userId, filters);
     const accepted = await this.findAcceptedPartnerIds(userId);
-    const pending = await this.repo.find({
+    const nonCandidateConns = await this.repo.find({
       where: [
         { requester_id: userId, status: 'pending' },
         { addressee_id: userId, status: 'pending' },
         { requester_id: userId, status: 'blocked' },
         { addressee_id: userId, status: 'blocked' },
+        { requester_id: userId, status: 'declined' },
+        { addressee_id: userId, status: 'declined' },
       ],
     });
-    const pendingIds = new Set(pending.map((c) => c.requester_id === userId ? c.addressee_id : c.requester_id));
-    const excluded = new Set([userId, ...accepted, ...pendingIds]);
+    const excludedIds = new Set(nonCandidateConns.map((c) => c.requester_id === userId ? c.addressee_id : c.requester_id));
+    const excluded = new Set([...accepted, ...excludedIds]);
     const candidates = all.filter((u) => !excluded.has(u.id));
     return rankCandidates(profile, candidates);
   }

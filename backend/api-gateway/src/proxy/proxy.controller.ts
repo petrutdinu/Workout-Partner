@@ -102,6 +102,18 @@ export class ProxyController {
     send(res, result);
   }
 
+  // ── Shared workout routes (competitive sessions) ───────────────
+  @All('api/v1/shared-workouts*')
+  @UseGuards(AuthGuard)
+  async sharedWorkouts(@Req() req: Request, @Res() res: Response) {
+    const info = (req as any).userInfo;
+    const { data: user } = await firstValueFrom(this.http.post(`${USER_SVC}/api/v1/users/sync`, { keycloak_id: info.keycloak_id, email: info.email, username: info.username, first_name: info.first_name, last_name: info.last_name, role: info.primary_role }));
+    // Rewrite /api/v1/shared-workouts -> /api/v1/workouts/shared on the workout-service
+    const rewritten = req.path.replace('/api/v1/shared-workouts', '/api/v1/workouts/shared');
+    const result = await this.proxy.forward(WORKOUT_SVC, rewritten, req, { 'x-user-id': user.id });
+    send(res, result);
+  }
+
   // ── Matching routes ────────────────────────────────────────────
   @All('api/v1/matching*')
   @UseGuards(AuthGuard)

@@ -33,8 +33,8 @@ export class UserService {
   findById(id: string) { return this.repo.findById(id); }
   findByKeycloakId(id: string) { return this.repo.findByKeycloakId(id); }
   findAll() { return this.repo.findAll(); }
-  findAthletes(fitnessLevel?: string, primaryGoal?: string, city?: string) {
-    return this.repo.findAthletes(fitnessLevel, primaryGoal, city);
+  findAthletes(fitnessLevel?: string, primaryGoal?: string, city?: string, excludeId?: string) {
+    return this.repo.findAthletes(fitnessLevel, primaryGoal, city, excludeId);
   }
   findTrainers() { return this.repo.findTrainers(); }
   async delete(id: string): Promise<boolean> {

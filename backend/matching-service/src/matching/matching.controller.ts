@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Put, Delete, Body, Param, Headers,
+  Controller, Get, Post, Put, Delete, Body, Param, Headers, Query,
   HttpCode, NotFoundException, BadRequestException, ConflictException, ForbiddenException,
 } from '@nestjs/common';
 import { MatchingService } from './matching.service';
@@ -25,10 +25,15 @@ export class MatchingController {
   }
 
   @Get('browse')
-  async browse(@Headers('x-user-id') uid: string) {
+  async browse(@Headers('x-user-id') uid: string, @Query() query: Record<string, string>) {
     const userId = this.userId(uid);
     const profile = await this.service.fetchUser(userId);
-    return this.service.getSuggestions(userId, profile || {});
+    const { fitness_level, primary_goal, city } = query;
+    const filters: Record<string, string> = {};
+    if (fitness_level) filters.fitness_level = fitness_level;
+    if (primary_goal) filters.primary_goal = primary_goal;
+    if (city) filters.city = city;
+    return this.service.getSuggestions(userId, profile || {}, filters);
   }
 
   @Get('partners')
