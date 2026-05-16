@@ -18,6 +18,7 @@ export class WorkoutService {
       user_id: userId,
       title: data.title,
       workout_type: data.workout_type,
+      muscle_group: data.muscle_group || null,
       started_at: data.started_at ? new Date(data.started_at) : new Date(),
       duration_minutes: data.duration_minutes,
       is_public: data.is_public ?? true,
@@ -38,14 +39,18 @@ export class WorkoutService {
       totalCal += calories;
     }
     if (totalCal > 0 && !session.duration_minutes) {
-      session.total_calories = Math.round(totalCal * 1.1 * 100) / 100;
-      await this.sessions.save(session);
+      const newTotal = Math.round(totalCal * 1.1 * 100) / 100;
+      await this.sessions.createQueryBuilder()
+        .update()
+        .set({ total_calories: newTotal })
+        .where('id = :id', { id: session.id })
+        .execute();
     }
     return this.sessions.findOne({ where: { id: session.id }, relations: ['exercises'] });
   }
 
   async addExercise(sessionId: string, userId: string, data: any, userWeightKg?: number) {
-    const session = await this.sessions.findOne({ where: { id: sessionId } });
+    const session = await this.sessions.findOne({ where: { id: sessionId }, relations: [] });
     if (!session || session.user_id !== userId) throw new NotFoundException('Session not found');
     const { calories, met } = estimateExerciseCalories(
       data.exercise_name, data.sets, data.reps, data.weight_kg, data.duration_sec, userWeightKg,
@@ -53,8 +58,12 @@ export class WorkoutService {
     const exercise = this.exercises.create({ ...data, session_id: sessionId, calories, met_value: met });
     await this.exercises.save(exercise);
     const cur = parseFloat(session.total_calories as any) || 0;
-    session.total_calories = Math.round((cur + calories) * 100) / 100;
-    await this.sessions.save(session);
+    const newTotal = Math.round((cur + calories) * 100) / 100;
+    await this.sessions.createQueryBuilder()
+      .update()
+      .set({ total_calories: newTotal })
+      .where('id = :id', { id: sessionId })
+      .execute();
     return exercise;
   }
 
@@ -81,7 +90,8 @@ export class WorkoutService {
     const result = await this.sessions.createQueryBuilder('s')
       .select('COUNT(*)', 'total_sessions')
       .addSelect('SUM(s.total_calories)', 'total_calories')
-      .addSelect('SUM(s.duration_minutes)', 'total_minutes')
+      .addSelect('SUM(s.duration_minutes)', 'total_duration_minutes')
+      .addSelect('AVG(s.duration_minutes)', 'avg_session_duration')
       .where('s.user_id = :userId', { userId })
       .getRawOne();
     return result;

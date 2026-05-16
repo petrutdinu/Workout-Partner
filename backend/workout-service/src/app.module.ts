@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WorkoutModule } from './workout/workout.module';
 import { WorkoutSession } from './workout/workout-session.entity';
 import { WorkoutExercise } from './workout/workout-exercise.entity';
+import { SharedWorkoutSession } from './workout/shared-session.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { WorkoutExercise } from './workout/workout-exercise.entity';
       database: process.env.DATABASE_NAME || 'workoutpartner',
       username: process.env.DATABASE_USER || 'workoutpartner',
       password: process.env.DATABASE_PASSWORD || 'workoutpartner_password',
-      entities: [WorkoutSession, WorkoutExercise],
+      entities: [WorkoutSession, WorkoutExercise, SharedWorkoutSession],
       synchronize: false,
     }),
     WorkoutModule,

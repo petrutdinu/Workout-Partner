@@ -35,6 +35,9 @@ export class WorkoutSession {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  muscle_group: string;
+
   @CreateDateColumn()
   created_at: Date;
 
