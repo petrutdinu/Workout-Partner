@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS workout_sessions (
     total_calories DECIMAL(8,2),
     is_public BOOLEAN DEFAULT true,
     notes TEXT,
+    muscle_group VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -81,6 +82,26 @@ CREATE TABLE IF NOT EXISTS direct_messages (
     is_read BOOLEAN DEFAULT false,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Shared workout sessions (competitive co-op between two partners)
+CREATE TABLE IF NOT EXISTS shared_workout_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    workout_type VARCHAR(50) NOT NULL,
+    host_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    guest_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    host_session_id UUID REFERENCES workout_sessions(id) ON DELETE SET NULL,
+    guest_session_id UUID REFERENCES workout_sessions(id) ON DELETE SET NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    started_at TIMESTAMP,
+    ended_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT shared_status_check CHECK (status IN ('pending','active','finished'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_shared_host ON shared_workout_sessions(host_id);
+CREATE INDEX IF NOT EXISTS idx_shared_guest ON shared_workout_sessions(guest_id);
+CREATE INDEX IF NOT EXISTS idx_shared_status ON shared_workout_sessions(status);
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_users_keycloak_id ON users(keycloak_id);

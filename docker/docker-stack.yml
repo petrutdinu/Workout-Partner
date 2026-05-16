@@ -124,9 +124,12 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       REDIS_PASSWORD: workoutpartner_redis_password
+    ports:
+      - "8002:8002"
     networks:
       - db-net
       - cache-net
+      - frontend-net
     deploy:
       replicas: 1
       restart_policy:
@@ -150,9 +153,12 @@ services:
       REDIS_PORT: "6379"
       REDIS_PASSWORD: workoutpartner_redis_password
       USER_SERVICE_URL: http://user-service:8001
+    ports:
+      - "8003:8003"
     networks:
       - db-net
       - cache-net
+      - frontend-net
     deploy:
       replicas: 1
       restart_policy:
@@ -198,6 +204,7 @@ services:
       KEYCLOAK_CLIENT_ID: workoutpartner-client
       USER_SERVICE_URL: http://user-service:8001
       WORKOUT_SERVICE_URL: http://workout-service:8002
+      WORKOUT_WS_URL: http://workout-service:8002
       MATCHING_SERVICE_URL: http://matching-service:8003
       GYM_SERVICE_URL: http://gym-service:8004
       REDIS_HOST: redis
