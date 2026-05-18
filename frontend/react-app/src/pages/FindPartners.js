@@ -313,8 +313,8 @@ function AthleteCard({ athlete, index, isTopMatch, sentRequest, onSend }) {
         </button>
         <button
           className="fp-btn fp-btn--ghost"
-          aria-label="Message"
-          onClick={() => navigate(`/chat/${athlete.id}`)}
+          aria-label="View profile"
+          onClick={() => navigate(`/profile/${athlete.id}`)}
         >
           <User size={14} strokeWidth={2.25} />
         </button>

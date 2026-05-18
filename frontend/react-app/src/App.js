@@ -18,6 +18,7 @@ import SharedWorkoutList from './pages/SharedWorkoutList';
 import SharedWorkout from './pages/SharedWorkout';
 import GymMap from './pages/GymMap';
 import TrainerDirectory from './pages/TrainerDirectory';
+import PublicProfile from './pages/PublicProfile';
 import './App.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -46,6 +47,7 @@ const AppLayout = () => {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfile /></ProtectedRoute>} />
           <Route path="/workouts" element={<ProtectedRoute><WorkoutLog /></ProtectedRoute>} />
           <Route path="/workouts/new" element={<ProtectedRoute><WorkoutForm /></ProtectedRoute>} />
           <Route path="/workouts/:id" element={<ProtectedRoute><WorkoutDetail /></ProtectedRoute>} />

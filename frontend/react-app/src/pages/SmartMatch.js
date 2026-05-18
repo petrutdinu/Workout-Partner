@@ -102,7 +102,7 @@ const SmartMatch = () => {
                     onClick={() => sendRequest(s.id)}>
                     {sentRequests.has(s.id) ? 'Sent' : 'Connect'}
                   </button>
-                  <Link to={`/chat/${s.id}`} className="btn btn-secondary">Chat</Link>
+                  <Link to={`/profile/${s.id}`} className="btn btn-secondary">Profile</Link>
                 </div>
               </div>
             </div>

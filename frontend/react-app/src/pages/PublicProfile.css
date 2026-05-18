@@ -1,0 +1,469 @@
+/* ── Page shell ───────────────────────────────────────────────── */
+.pp-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── Loading / Error / Not found ─────────────────────────────── */
+.pp-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  color: #6B7280;
+  font-size: 0.9375rem;
+}
+
+.pp-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.pp-error-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: #FEF2F2;
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pp-error-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pp-error-sub {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.pp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 999px;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.pp-back-btn:hover {
+  background: #F9FAFB;
+}
+
+/* ── Hero card ────────────────────────────────────────────────── */
+.pp-hero {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pp-hero-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.pp-avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+
+.pp-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pp-hero-name {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.pp-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.pp-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  color: #6B7280;
+}
+
+.pp-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pp-level-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pp-goal-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.pp-bio {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
+}
+
+/* ── Action buttons ───────────────────────────────────────────── */
+.pp-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+.pp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, background 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pp-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pp-btn--primary {
+  background: #DC2626;
+  color: white;
+  box-shadow: 0 6px 16px -6px #DC262699;
+}
+
+.pp-btn--primary:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.pp-btn--outline {
+  background: white;
+  color: #374151;
+  border: 1px solid #E5E7EB;
+}
+
+.pp-btn--outline:hover:not(:disabled) {
+  background: #F9FAFB;
+}
+
+.pp-btn--message {
+  background: #1F2937;
+  color: white;
+}
+
+.pp-btn--message:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+/* ── Privacy gate banners ─────────────────────────────────────── */
+.pp-gate {
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.pp-gate--none {
+  background: #FEF9EC;
+  border: 1px solid #FCD34D;
+}
+
+.pp-gate--pending {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+}
+
+.pp-gate-icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.pp-gate-icon--none {
+  color: #D97706;
+}
+
+.pp-gate-icon--pending {
+  color: #2563EB;
+}
+
+.pp-gate-body {
+  flex: 1;
+}
+
+.pp-gate-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.2rem;
+}
+
+.pp-gate-msg {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* ── Stats grid ───────────────────────────────────────────────── */
+.pp-section {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pp-section-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 1.25rem;
+}
+
+.pp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.pp-stat-card {
+  background: #F9FAFB;
+  border: 1px solid #F3F4F6;
+  border-radius: 12px;
+  padding: 1rem 0.875rem;
+  text-align: center;
+}
+
+.pp-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.pp-stat-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Preferred days pills ─────────────────────────────────────── */
+.pp-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pp-day-pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: rgba(220,38,38,0.08);
+  color: #DC2626;
+  border: 1px solid rgba(220,38,38,0.18);
+}
+
+/* ── Workout types pills ──────────────────────────────────────── */
+.pp-workout-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pp-wtype-pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: #F3F4F6;
+  color: #374151;
+}
+
+/* ── Workout list ─────────────────────────────────────────────── */
+.pp-workout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pp-workout-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid #F3F4F6;
+  border-radius: 10px;
+  background: #FAFAFA;
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.pp-workout-item:hover {
+  background: #F3F4F6;
+  border-color: #E5E7EB;
+}
+
+.pp-workout-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 8px;
+  background: rgba(220,38,38,0.1);
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pp-workout-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pp-workout-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pp-workout-meta {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  margin-top: 0.15rem;
+}
+
+.pp-workout-cal {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #DC2626;
+  white-space: nowrap;
+}
+
+.pp-workout-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9CA3AF;
+  font-size: 0.875rem;
+}
+
+.pp-view-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  border: 1px dashed #D1D5DB;
+  border-radius: 8px;
+  background: transparent;
+  color: #6B7280;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.pp-view-all-btn:hover {
+  background: #F9FAFB;
+  color: #374151;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .pp-page {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .pp-hero {
+    padding: 1.25rem;
+  }
+
+  .pp-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pp-hero-name {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pp-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

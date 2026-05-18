@@ -268,6 +268,13 @@ function PartnerCard({ connection, index, variant, onAccept, onDecline, onRemove
               <>
                 <button
                   className="pl-btn pl-btn--outline"
+                  onClick={() => navigate(`/profile/${other?.id}`)}
+                >
+                  <User size={14} strokeWidth={2.25} />
+                  Profile
+                </button>
+                <button
+                  className="pl-btn pl-btn--outline"
                   onClick={() => navigate(`/chat/${other?.id}`)}
                 >
                   <MessageCircle size={14} strokeWidth={2.25} />

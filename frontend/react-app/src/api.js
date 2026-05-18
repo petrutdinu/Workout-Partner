@@ -37,6 +37,7 @@ export const userApi = {
   syncUser: () => api.post('/users/sync'),
   getCurrentUser: () => api.get('/users/me'),
   getUserById: (userId) => api.get(`/users/${userId}`),
+  getPublicProfile: (userId) => api.get(`/users/${userId}/public-profile`),
   updateFitnessProfile: (data) => api.put('/users/me/fitness-profile', data),
   getAthletes: (params = {}) => api.get('/users/athletes', { params }),
   getTrainers: (params = {}) => api.get('/users/trainers', { params })
