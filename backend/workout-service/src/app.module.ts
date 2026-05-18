@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
 import { WorkoutModule } from './workout/workout.module';
 import { WorkoutSession } from './workout/workout-session.entity';
 import { WorkoutExercise } from './workout/workout-exercise.entity';
@@ -17,6 +18,7 @@ import { SharedWorkoutSession } from './workout/shared-session.entity';
       entities: [WorkoutSession, WorkoutExercise, SharedWorkoutSession],
       synchronize: false,
     }),
+    HttpModule,
     WorkoutModule,
   ],
 })
