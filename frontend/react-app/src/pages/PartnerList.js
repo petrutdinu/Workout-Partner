@@ -287,6 +287,13 @@ function PartnerCard({ connection, index, variant, onAccept, onDecline, onRemove
                   <UserCheck size={14} strokeWidth={2.25} />
                   View Workouts
                 </button>
+                <button
+                  className="pl-btn pl-btn--outline pl-btn--danger"
+                  onClick={() => onRemove(connection.id)}
+                >
+                  <XCircle size={13} strokeWidth={2.25} />
+                  Remove
+                </button>
               </>
             )}
             {variant === 'incoming' && (
