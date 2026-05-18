@@ -1,9 +1,9 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Dumbbell, LayoutDashboard, Users, MapPin, MessageCircle,
-  Menu, X, Bell, Swords,
+  Menu, X, Bell, Swords, LogOut, ChevronDown,
 } from 'lucide-react';
 import './Header.css';
 
@@ -20,6 +20,18 @@ const Header = () => {
   const { user, isAuthenticated, isAdmin, isTrainer, login, logout } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
   const containerRef = useRef(null);
   const tabRefs = useRef({});
   const [ind, setInd] = useState({ left: 0, width: 0 });
@@ -109,15 +121,30 @@ const Header = () => {
                 <span className="hdr-bell-dot" />
               </button>
 
-              <div className="hdr-user-cluster">
-                <div className="hdr-avatar">{initials}</div>
-                <div className="hdr-user-info">
-                  <span className="hdr-user-name">{displayName}</span>
-                  {role && (
-                    <span className="hdr-role-chip">{role}</span>
-                  )}
-                </div>
-                <button onClick={logout} className="hdr-logout">Logout</button>
+              <div className="hdr-user-cluster" ref={userMenuRef}>
+                <button
+                  className="hdr-user-btn"
+                  onClick={() => setUserMenuOpen(v => !v)}
+                  aria-expanded={userMenuOpen}
+                >
+                  <div className="hdr-avatar">{initials}</div>
+                  <div className="hdr-user-info">
+                    <span className="hdr-user-name">{displayName}</span>
+                    {role && <span className="hdr-role-chip">{role}</span>}
+                  </div>
+                  <ChevronDown size={14} className={`hdr-chevron${userMenuOpen ? ' hdr-chevron--open' : ''}`} />
+                </button>
+                {userMenuOpen && (
+                  <div className="hdr-user-dropdown">
+                    <button
+                      className="hdr-dropdown-item hdr-dropdown-item--danger"
+                      onClick={() => { setUserMenuOpen(false); logout(); }}
+                    >
+                      <LogOut size={15} strokeWidth={2} />
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (
@@ -162,6 +189,13 @@ const Header = () => {
               <span className="hdr-mobile-signed">Signed in</span>
             </div>
             {role && <span className="hdr-role-chip">{role}</span>}
+            <button
+              className="hdr-mobile-logout"
+              onClick={() => { setMobileOpen(false); logout(); }}
+            >
+              <LogOut size={15} strokeWidth={2} />
+              Logout
+            </button>
           </div>
         </div>
       )}
