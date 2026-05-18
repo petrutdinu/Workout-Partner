@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { PartnerConnection } from './partner-connection.entity';
 import { rankCandidates } from './matching.algorithm';
+import { NotificationService } from '../notification/notification.service';
 
 const USER_SERVICE = process.env.USER_SERVICE_URL || 'http://user-service:8001';
 
@@ -13,6 +14,7 @@ export class MatchingService {
   constructor(
     @InjectRepository(PartnerConnection) private repo: Repository<PartnerConnection>,
     private http: HttpService,
+    private notifications: NotificationService,
   ) {}
 
   private async fetchAllAthletes(excludeId?: string, filters: Record<string, string> = {}): Promise<any[]> {
@@ -70,7 +72,17 @@ export class MatchingService {
     });
     if (existing) return { error: 'Connection already exists', status: existing.status };
     const conn = this.repo.create({ requester_id: requesterId, addressee_id: addresseeId, match_score: matchScore, status: 'pending', initiated_by: 'user' });
-    return this.repo.save(conn);
+    const saved = await this.repo.save(conn);
+    const requester = await this.fetchUser(requesterId);
+    const name = requester?.first_name || requester?.username || 'Someone';
+    this.notifications.create(
+      addresseeId,
+      'partner_request',
+      'New partner request',
+      `${name} sent you a partner request.`,
+      { connection_id: saved.id, requester_id: requesterId },
+    ).catch(() => {});
+    return saved;
   }
 
   async updateConnection(connId: string, userId: string, newStatus: string) {
@@ -78,7 +90,19 @@ export class MatchingService {
     if (!conn) return null;
     if (['accepted', 'declined'].includes(newStatus) && conn.addressee_id !== userId) return { error: 'Not authorized' };
     conn.status = newStatus;
-    return this.repo.save(conn);
+    const saved = await this.repo.save(conn);
+    if (newStatus === 'accepted') {
+      const accepter = await this.fetchUser(userId);
+      const name = accepter?.first_name || accepter?.username || 'Someone';
+      this.notifications.create(
+        conn.requester_id,
+        'partner_accepted',
+        'Partner request accepted',
+        `${name} accepted your partner request.`,
+        { connection_id: connId, partner_id: userId },
+      ).catch(() => {});
+    }
+    return saved;
   }
 
   async deleteConnection(connId: string, userId: string): Promise<boolean> {
