@@ -1,9 +1,11 @@
-import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useLayoutEffect, useEffect, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { notificationApi } from '../api';
 import {
   Dumbbell, LayoutDashboard, Users, MapPin, MessageCircle,
   Menu, X, Bell, Swords, LogOut, ChevronDown,
+  UserPlus, UserCheck, MessageSquare, Trophy, CheckCheck,
 } from 'lucide-react';
 import './Header.css';
 
@@ -16,26 +18,115 @@ const NAV_TABS = [
   { path: '/chat',            label: 'Chat',      icon: MessageCircle },
 ];
 
+const NOTIF_ICONS = {
+  partner_request:      UserPlus,
+  partner_accepted:     UserCheck,
+  new_message:          MessageSquare,
+  shared_workout_invite: Trophy,
+  shared_workout_joined: Trophy,
+};
+
+function notifPath(n) {
+  switch (n.type) {
+    case 'partner_request':
+    case 'partner_accepted':
+      return '/partners';
+    case 'new_message':
+      return n.metadata?.sender_id ? `/chat/${n.metadata.sender_id}` : '/chat';
+    case 'shared_workout_invite':
+    case 'shared_workout_joined':
+      return n.metadata?.session_id ? `/shared-workouts/${n.metadata.session_id}` : '/shared-workouts';
+    default:
+      return null;
+  }
+}
+
+function timeAgo(iso) {
+  const diff = (Date.now() - new Date(iso)) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
+const POLL_INTERVAL = 15000;
+
 const Header = () => {
   const { user, isAuthenticated, isAdmin, isTrainer, login, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const userMenuRef = useRef(null);
+  const [bellOpen, setBellOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  const userMenuRef = useRef(null);
+  const bellRef = useRef(null);
   const containerRef = useRef(null);
   const tabRefs = useRef({});
   const [ind, setInd] = useState({ left: 0, width: 0 });
 
+  // ── outside-click: user menu ──────────────────────────────────
+  useEffect(() => {
+    const handler = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setUserMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // ── outside-click: bell ───────────────────────────────────────
+  useEffect(() => {
+    const handler = (e) => {
+      if (bellRef.current && !bellRef.current.contains(e.target)) setBellOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // ── notification polling ──────────────────────────────────────
+  const fetchCount = useCallback(() => {
+    if (!isAuthenticated) return;
+    notificationApi.getUnreadCount().then(res => setUnreadCount(res.data?.count ?? 0)).catch(() => {});
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    fetchCount();
+    const id = setInterval(fetchCount, POLL_INTERVAL);
+    return () => clearInterval(id);
+  }, [fetchCount]);
+
+  const openBell = () => {
+    setBellOpen(v => {
+      if (!v) {
+        notificationApi.getAll({ limit: 20 })
+          .then(res => setNotifications(res.data || []))
+          .catch(() => {});
+      }
+      return !v;
+    });
+    setUserMenuOpen(false);
+  };
+
+  const handleNotifClick = async (n) => {
+    if (!n.is_read) {
+      await notificationApi.markRead(n.id).catch(() => {});
+      setNotifications(prev => prev.map(x => x.id === n.id ? { ...x, is_read: true } : x));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    }
+    setBellOpen(false);
+    const path = notifPath(n);
+    if (path) navigate(path);
+  };
+
+  const handleMarkAll = async () => {
+    await notificationApi.markAllRead().catch(() => {});
+    setNotifications(prev => prev.map(x => ({ ...x, is_read: true })));
+    setUnreadCount(0);
+  };
+
+  // ── sliding pill ──────────────────────────────────────────────
   const activeTab = NAV_TABS.find(t =>
     location.pathname === t.path || location.pathname.startsWith(t.path + '/')
   );
@@ -75,7 +166,6 @@ const Header = () => {
   return (
     <header className="hdr">
       <div className="hdr-inner">
-        {/* Logo */}
         <Link to="/" className="hdr-logo">
           <span className="hdr-logo-icon">
             <Dumbbell size={18} strokeWidth={2.5} />
@@ -83,15 +173,10 @@ const Header = () => {
           <span className="hdr-logo-text">Workout Partner</span>
         </Link>
 
-        {/* Desktop nav */}
         {isAuthenticated && (
           <div ref={containerRef} className="hdr-nav">
-            {/* Sliding pill indicator */}
             {activeTab && (
-              <span
-                className="hdr-nav-indicator"
-                style={{ left: ind.left, width: ind.width }}
-              />
+              <span className="hdr-nav-indicator" style={{ left: ind.left, width: ind.width }} />
             )}
             {NAV_TABS.map(tab => {
               if (tab.path === '/trainers' && !isTrainer) return null;
@@ -112,19 +197,73 @@ const Header = () => {
           </div>
         )}
 
-        {/* Right cluster */}
         <div className="hdr-right">
           {isAuthenticated ? (
             <>
-              <button className="hdr-bell" aria-label="Notifications">
-                <Bell size={18} />
-                <span className="hdr-bell-dot" />
-              </button>
+              {/* Bell */}
+              <div className="hdr-bell-wrap" ref={bellRef}>
+                <button
+                  className="hdr-bell"
+                  aria-label="Notifications"
+                  onClick={openBell}
+                  aria-expanded={bellOpen}
+                >
+                  <Bell size={18} />
+                  {unreadCount > 0 && (
+                    <span className="hdr-bell-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                  )}
+                </button>
 
+                {bellOpen && (
+                  <div className="hdr-notif-dropdown">
+                    <div className="hdr-notif-head">
+                      <span className="hdr-notif-title">Notifications</span>
+                      {unreadCount > 0 && (
+                        <button className="hdr-notif-markall" onClick={handleMarkAll}>
+                          <CheckCheck size={13} />
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="hdr-notif-list">
+                      {notifications.length === 0 ? (
+                        <div className="hdr-notif-empty">
+                          <Bell size={28} strokeWidth={1.5} />
+                          <span>No notifications yet</span>
+                        </div>
+                      ) : (
+                        notifications.map(n => {
+                          const Icon = NOTIF_ICONS[n.type] || Bell;
+                          return (
+                            <button
+                              key={n.id}
+                              className={`hdr-notif-item${n.is_read ? '' : ' hdr-notif-item--unread'}`}
+                              onClick={() => handleNotifClick(n)}
+                            >
+                              <span className="hdr-notif-icon-wrap">
+                                <Icon size={15} strokeWidth={2} />
+                              </span>
+                              <div className="hdr-notif-body">
+                                <div className="hdr-notif-item-title">{n.title}</div>
+                                <div className="hdr-notif-item-msg">{n.message}</div>
+                                <div className="hdr-notif-item-time">{timeAgo(n.created_at)}</div>
+                              </div>
+                              {!n.is_read && <span className="hdr-notif-unread-dot" />}
+                            </button>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* User menu */}
               <div className="hdr-user-cluster" ref={userMenuRef}>
                 <button
                   className="hdr-user-btn"
-                  onClick={() => setUserMenuOpen(v => !v)}
+                  onClick={() => { setUserMenuOpen(v => !v); setBellOpen(false); }}
                   aria-expanded={userMenuOpen}
                 >
                   <div className="hdr-avatar">{initials}</div>
@@ -151,7 +290,6 @@ const Header = () => {
             <button onClick={login} className="hdr-login">Login</button>
           )}
 
-          {/* Hamburger */}
           {isAuthenticated && (
             <button
               className="hdr-hamburger"
@@ -164,7 +302,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile drawer */}
       {mobileOpen && isAuthenticated && (
         <div className="hdr-mobile-drawer">
           {NAV_TABS.map(tab => {

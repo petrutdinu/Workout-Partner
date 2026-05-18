@@ -107,6 +107,10 @@
   flex-shrink: 0;
 }
 
+.hdr-bell-wrap {
+  position: relative;
+}
+
 .hdr-bell {
   position: relative;
   width: 2.25rem;
@@ -127,15 +131,166 @@
   color: #111827;
 }
 
-.hdr-bell-dot {
+.hdr-bell-badge {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.25rem;
+  right: 0.25rem;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: #DC2626;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid white;
+  line-height: 1;
+}
+
+/* ── Notification dropdown ───────────────────────────────────────── */
+.hdr-notif-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -0.5rem;
+  width: 320px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,0.14);
+  z-index: 300;
+  overflow: hidden;
+  animation: hdrDropIn 0.15s cubic-bezier(.2,.7,.3,1) both;
+}
+
+.hdr-notif-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem 0.625rem;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.hdr-notif-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.hdr-notif-markall {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: none;
+  background: transparent;
+  color: #DC2626;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+
+.hdr-notif-markall:hover {
+  background: rgba(220,38,38,0.07);
+}
+
+.hdr-notif-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.hdr-notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  color: #9CA3AF;
+  font-size: 0.8125rem;
+}
+
+.hdr-notif-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+  position: relative;
+  border-bottom: 1px solid #F9FAFB;
+}
+
+.hdr-notif-item:last-child {
+  border-bottom: none;
+}
+
+.hdr-notif-item:hover {
+  background: #F9FAFB;
+}
+
+.hdr-notif-item--unread {
+  background: rgba(220,38,38,0.03);
+}
+
+.hdr-notif-item--unread:hover {
+  background: rgba(220,38,38,0.06);
+}
+
+.hdr-notif-icon-wrap {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(220,38,38,0.1);
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.05rem;
+}
+
+.hdr-notif-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.hdr-notif-item-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.15rem;
+}
+
+.hdr-notif-item-msg {
+  font-size: 0.75rem;
+  color: #6B7280;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hdr-notif-item-time {
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  margin-top: 0.2rem;
+}
+
+.hdr-notif-unread-dot {
+  flex-shrink: 0;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: #DC2626;
-  border: 2px solid white;
+  margin-top: 0.35rem;
 }
 
 .hdr-user-cluster {
@@ -381,7 +536,7 @@
   .hdr-mobile-drawer {
     display: flex;
   }
-  .hdr-bell {
+  .hdr-bell-wrap {
     display: none;
   }
   .hdr-user-cluster {
@@ -389,5 +544,12 @@
   }
   .hdr-logo-text {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hdr-notif-dropdown {
+    width: calc(100vw - 2rem);
+    right: -1rem;
   }
 }

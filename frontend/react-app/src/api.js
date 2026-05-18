@@ -83,4 +83,11 @@ export const gymApi = {
   invalidateCache: () => api.post('/gyms/cache/invalidate')
 };
 
+export const notificationApi = {
+  getAll: (params = {}) => api.get('/notifications', { params }),
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+  markRead: (id) => api.patch(`/notifications/${id}/read`),
+  markAllRead: () => api.patch('/notifications/read-all'),
+};
+
 export default api;
