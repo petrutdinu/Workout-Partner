@@ -85,6 +85,15 @@ export class ProxyController {
     send(res, result);
   }
 
+  @All('api/v1/users/:id/public-profile')
+  @UseGuards(AuthGuard)
+  async publicProfile(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
+    const info = (req as any).userInfo;
+    const { data: viewer } = await firstValueFrom(this.http.post(`${USER_SVC}/api/v1/users/sync`, { keycloak_id: info.keycloak_id, email: info.email, username: info.username, first_name: info.first_name, last_name: info.last_name, role: info.primary_role }));
+    const result = await this.proxy.forward(MATCHING_SVC, `/api/v1/users/${id}/public-profile`, req, { 'x-user-id': viewer.id });
+    send(res, result);
+  }
+
   @All('api/v1/users/:id')
   @UseGuards(AuthGuard)
   async userById(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
