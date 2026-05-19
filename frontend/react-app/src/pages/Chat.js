@@ -41,6 +41,27 @@ function formatTime(isoStr) {
   return new Date(isoStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+function getDayKey(isoStr) {
+  if (!isoStr) return 'unknown';
+  const d = new Date(isoStr);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function getDayLabel(isoStr) {
+  if (!isoStr) return '';
+  const msgDate = new Date(isoStr);
+  const today = new Date();
+  const diffDays = Math.floor(
+    (new Date(today.getFullYear(), today.getMonth(), today.getDate()) -
+     new Date(msgDate.getFullYear(), msgDate.getMonth(), msgDate.getDate())) /
+    86400000
+  );
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return msgDate.toLocaleDateString([], { weekday: 'long' });
+  return msgDate.toLocaleDateString([], { month: 'short', day: 'numeric', year: diffDays > 365 ? 'numeric' : undefined });
+}
+
 // ── Sidebar ─────────────────────────────────────────────────────────
 function Sidebar({ partners, activeId, onSelect, hidden }) {
   const [q, setQ] = useState('');
@@ -302,19 +323,21 @@ function ConversationPane({ otherUser, messages, loading, connected, myUserId, o
                 <span>Start the conversation!</span>
               </div>
             )}
-            {messages.length > 0 && <DayChip label="Today" />}
             {messages.map((msg, i) => {
               const isMine = msg.sender_id === myUserId;
               const prev = messages[i - 1];
-              const showAvatar = !isMine && (!prev || prev.sender_id !== msg.sender_id);
+              const dayChanged = !prev || getDayKey(prev.sent_at) !== getDayKey(msg.sent_at);
+              const showAvatar = !isMine && (dayChanged || prev.sender_id !== msg.sender_id);
               return (
-                <Bubble
-                  key={msg.id || i}
-                  msg={msg}
-                  isMine={isMine}
-                  otherUser={otherUser}
-                  showAvatar={showAvatar}
-                />
+                <React.Fragment key={msg.id || i}>
+                  {dayChanged && <DayChip label={getDayLabel(msg.sent_at)} />}
+                  <Bubble
+                    msg={msg}
+                    isMine={isMine}
+                    otherUser={otherUser}
+                    showAvatar={showAvatar}
+                  />
+                </React.Fragment>
               );
             })}
             <div ref={messagesEndRef} />

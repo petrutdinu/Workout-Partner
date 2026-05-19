@@ -49,7 +49,7 @@ function timeAgo(iso) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-const POLL_INTERVAL = 15000;
+const POLL_INTERVAL = 5000;
 
 const Header = () => {
   const { user, isAuthenticated, isAdmin, isTrainer, login, logout } = useAuth();
@@ -94,7 +94,12 @@ const Header = () => {
   useEffect(() => {
     fetchCount();
     const id = setInterval(fetchCount, POLL_INTERVAL);
-    return () => clearInterval(id);
+    const onVisible = () => { if (document.visibilityState === 'visible') fetchCount(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [fetchCount]);
 
   const openBell = () => {
@@ -111,9 +116,13 @@ const Header = () => {
 
   const handleNotifClick = async (n) => {
     if (!n.is_read) {
-      await notificationApi.markRead(n.id).catch(() => {});
-      setNotifications(prev => prev.map(x => x.id === n.id ? { ...x, is_read: true } : x));
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      const toMark = n.type === 'new_message' && n.metadata?.sender_id
+        ? notifications.filter(x => !x.is_read && x.type === 'new_message' && x.metadata?.sender_id === n.metadata.sender_id)
+        : [n];
+      await Promise.all(toMark.map(x => notificationApi.markRead(x.id).catch(() => {})));
+      const markedIds = new Set(toMark.map(x => x.id));
+      setNotifications(prev => prev.map(x => markedIds.has(x.id) ? { ...x, is_read: true } : x));
+      setUnreadCount(prev => Math.max(0, prev - toMark.length));
     }
     setBellOpen(false);
     const path = notifPath(n);

@@ -38,11 +38,12 @@ const ProtectedRoute = ({ children }) => {
 const AppLayout = () => {
   const location = useLocation();
   const isLanding = location.pathname === '/';
+  const isChat = location.pathname === '/chat' || location.pathname.startsWith('/chat/');
 
   return (
-    <div className="app">
+    <div className={`app${isChat ? ' app--chat' : ''}`}>
       {!isLanding && <Header />}
-      <main className={isLanding ? '' : 'main-content'}>
+      <main className={isLanding ? '' : isChat ? 'main-content main-content--chat' : 'main-content'}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -65,7 +66,7 @@ const AppLayout = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      {!isLanding && (
+      {!isLanding && !isChat && (
         <footer className="footer">
           <p>Workout Partner &copy; 2026</p>
         </footer>

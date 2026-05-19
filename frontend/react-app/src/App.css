@@ -22,6 +22,20 @@ body {
   padding-bottom: 2rem;
 }
 
+.main-content--chat {
+  padding-bottom: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.app--chat {
+  overflow: hidden;
+  height: 100vh;
+}
+
 .footer {
   background: #212121;
   color: #888;
